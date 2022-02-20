@@ -1,0 +1,31 @@
+name: Deploy my lambda function
+
+on:
+  push:
+    branches:
+      - main
+      
+job:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the github repo code
+        uses: actions/checkout@v2
+      - name: Set up Python version to use
+        uses: actions/setup-python@V2
+        with:
+          python-version: 3.8
+      - name: Install Python libraries
+        run: |
+              cd function
+              python -m pip install --upgrade pip
+              if [-f requirments.txt]; then pip install -r requirements.txt -t .; fi\
+      - name: Create zip bundle
+        run: |
+              cd function
+              zip -r ../${{ github.sh }}.zip .
+      - name: Archive artifact
+        uses: actions/uplaod-artifact@v2
+        with:
+          name: zipped-bundle
+              
